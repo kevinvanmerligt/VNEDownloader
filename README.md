@@ -10,13 +10,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/kevinvanmerligt/VNEDownloader/releases/latest/download/VNEDownloader.apk">
+  <a href="https://github.com/kevinvanmerligt/VNEDownloader/raw/main/patch/VNEDownloader-v1.0.0.apk">
     <img src="https://img.shields.io/badge/Download_APK-VNEDownloader_v1.0.0-007AFF?style=for-the-badge&logo=android&logoColor=white" alt="Download APK" />
   </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/kevinvanmerligt/VNEDownloader/releases/latest/download/VNEDownloader.apk"><b>👉 Click here to directly download VNEDownloader.apk 👈</b></a>
+  <a href="https://github.com/kevinvanmerligt/VNEDownloader/raw/main/patch/VNEDownloader-v1.0.0.apk"><b>👉 Click here to directly download VNEDownloader-v1.0.0.apk 👈</b></a><br>
+  <sub><i>(Instant direct download straight from this repository)</i></sub>
 </p>
 
 ---
@@ -67,7 +68,7 @@ No account registration, no third-party servers, and no tracking—just paste a 
 ## 📲 How to Install & Use
 
 1. **Download the APK**  
-   Tap the download badge above or click [Direct Download VNEDownloader.apk](https://github.com/kevinvanmerligt/VNEDownloader/releases/latest/download/VNEDownloader.apk).
+   Tap the download badge above or click [Direct Download VNEDownloader-v1.0.0.apk](https://github.com/kevinvanmerligt/VNEDownloader/raw/main/patch/VNEDownloader-v1.0.0.apk) (also accessible locally at [`patch/VNEDownloader-v1.0.0.apk`](patch/VNEDownloader-v1.0.0.apk)).
 
 2. **Install on Your Phone**  
    Open the downloaded `.apk` file from your notification panel or File Manager. If prompted by Android, grant permission to *"Install apps from this source"*.
