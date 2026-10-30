@@ -311,6 +311,13 @@ class HistoryCard extends ConsumerWidget {
                 ref
                     .read(downloadControllerProvider.notifier)
                     .cancelDownload(item.id);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Unduhan dibatalkan.'),
+                    duration: Duration(seconds: 1),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
               },
             ),
           ],

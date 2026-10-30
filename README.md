@@ -10,13 +10,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/kevinvanmerligt/VNEDownloader/raw/main/patch/VNEDownloader-v1.0.0.apk">
-    <img src="https://img.shields.io/badge/Download_APK-VNEDownloader_v1.0.0-007AFF?style=for-the-badge&logo=android&logoColor=white" alt="Download APK" />
+  <a href="https://github.com/kevinvanmerligt/VNEDownloader/raw/main/patch/VNEDownloader-v1.0.2.apk">
+    <img src="https://img.shields.io/badge/Download_APK-VNEDownloader_v1.0.2-007AFF?style=for-the-badge&logo=android&logoColor=white" alt="Download APK" />
   </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/kevinvanmerligt/VNEDownloader/raw/main/patch/VNEDownloader-v1.0.0.apk"><b>👉 Click here to directly download VNEDownloader-v1.0.0.apk 👈</b></a><br>
+  <a href="https://github.com/kevinvanmerligt/VNEDownloader/raw/main/patch/VNEDownloader-v1.0.2.apk"><b>👉 Click here to directly download VNEDownloader-v1.0.2.apk 👈</b></a><br>
   <sub><i>(Instant direct download straight from this repository)</i></sub>
 </p>
 
@@ -51,24 +51,29 @@ No account registration, no third-party servers, and no tracking—just paste a 
 - **Light Theme**: Minimalist, clean sky-blue and crisp white interface designed for daytime readability.
 - **Halloween Blood-Red Dark Theme**: Matte pure black (`#0A0A0A`) with deep blood-red accents (`#991B1B`) without neon glow or AI slop—crafted for AMOLED displays and night viewing.
 
-### 🔒 5. 100% Private, Ad-Free & On-Device
+### 📂 5. Custom Download Folder Selection
+- Choose your preferred download directory freely: use the native Android folder picker or select from convenient presets (`Movies`, `Download`, `Music`, `DCIM`).
+- No forced system paths—you decide where your media lives.
+
+### 🔒 6. 100% Private, Ad-Free & On-Device
 - **Zero Ads**: No intrusive popups, banners, or video ads interrupting your experience.
 - **Direct Streaming**: Media downloads stream directly from source servers into your local storage without passing through any external proxy or third-party servers.
 - **No Sign-In Required**: No credentials or personal accounts needed.
 
-### 📲 6. Reliable Background Downloading
+### 📲 7. Reliable Background Downloading & Instant Cancel
 - Continue downloading even when you switch to other apps or turn off your screen.
-- Integrated Android status bar notification shows real-time progress percentages and download status.
+- Integrated Android status bar notification shows real-time progress percentages.
+- **Instant Cancel**: Hit the cancel button to stop downloads and delete partial data instantly.
 
-### 📶 7. Mobile Data Guard (Wi-Fi Only Mode)
+### 📶 8. Mobile Data Guard (Wi-Fi Only Mode)
 - Prevent accidental cellular data consumption with the built-in "Download over Wi-Fi only" switch.
 
-### 📁 8. Built-in Local History & One-Tap Playback
+### 📁 9. Built-in Local History & One-Tap Playback
 - All completed downloads are indexed in your local on-device history library.
 - Tap any completed video or audio file to immediately open and play it in your preferred media player (VLC, MX Player, Google Files, or the default gallery).
 - Manage storage directly within the app, with the option to delete history records alongside physical files.
 
-### 🪶 9. Compact & Lightweight (~21 MB)
+### 🪶 10. Compact & Lightweight (~21 MB)
 - Slashed by ~65% from bulky universal APKs to a streamlined ~21 MB package for quick downloads and low storage consumption.
 
 ---
@@ -76,7 +81,7 @@ No account registration, no third-party servers, and no tracking—just paste a 
 ## 📲 How to Install & Use
 
 1. **Download the APK**  
-   Tap the download badge above or click [Direct Download VNEDownloader-v1.0.0.apk](https://github.com/kevinvanmerligt/VNEDownloader/raw/main/patch/VNEDownloader-v1.0.0.apk) (also accessible locally at [`patch/VNEDownloader-v1.0.0.apk`](patch/VNEDownloader-v1.0.0.apk)).
+   Tap the download badge above or click [Direct Download VNEDownloader-v1.0.2.apk](https://github.com/kevinvanmerligt/VNEDownloader/raw/main/patch/VNEDownloader-v1.0.2.apk) (also accessible locally at [`patch/VNEDownloader-v1.0.2.apk`](patch/VNEDownloader-v1.0.2.apk)).
 
 2. **Install on Your Phone**  
    Open the downloaded `.apk` file from your notification panel or File Manager. If prompted by Android, grant permission to *"Install apps from this source"*.
@@ -86,11 +91,29 @@ No account registration, no third-party servers, and no tracking—just paste a 
 
 ---
 
+## 📜 Patch History & Changelog
+
+### 🚀 [v1.0.2] - 2026-10-30
+- **Fixed Download Engine**: Replaced fragile streaming with high-speed Dio client featuring timeout protection to resolve endless buffering issues.
+- **Fixed Retry Duplicate Downloads**: Debounced retry actions and reused item identifiers to prevent multiple parallel downloads of the same video.
+- **Fixed Cancel Button**: Implemented `CancelToken` to abort network transfers immediately, clear partial files, and update notification state.
+- **Fixed Android Storage Permissions**: Configured Android 8–15 storage permissions with fallback to guarantee write access across all devices.
+- **Added Custom Folder Selection**: Integrated native Android folder picker (`FilePicker`) and presets (`Movies`, `Download`, `Music`, `DCIM`).
+- **Mitigated False-Positive Warnings**: Removed unmapped background service declarations and sanitized YouTube rate-limit notices.
+
+### 🌟 [v1.0.0] - 2026-10-30
+- Initial stable MVP release with YouTube video (MP4) and audio (MP3) extraction.
+- 60Hz/90Hz/120Hz/144Hz high refresh rate screen support.
+- Halloween Blood-Red Dark Theme and clean light theme.
+- Local SQLite history with external media player launcher.
+
+---
+
 ## 📱 Device Requirements
 
 - **Operating System**: Android 8.0 (Oreo) or higher (API level 26+)
 - **Architecture**: Supports ARM64, ARMv7, and x86_64 devices
-- **Storage**: Standard read/write permission to save files to your `Movies/VNEDownloader` directory
+- **Storage**: Standard read/write permission to save files to your selected folder
 
 ---
 

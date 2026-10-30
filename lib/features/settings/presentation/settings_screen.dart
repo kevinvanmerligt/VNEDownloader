@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vnedownloader/app/l10n/app_localizations.dart';
@@ -8,6 +9,156 @@ import '../domain/app_settings.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
+
+  Future<void> _showFolderDialog(BuildContext context, WidgetRef ref) async {
+    final settings = ref.read(settingsProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = isDark ? AppConstants.darkPrimaryAccent : AppConstants.primaryColor;
+
+    final presets = [
+      'Movies/VNEDownloader',
+      'Download/VNEDownloader',
+      'Music/VNEDownloader',
+      'DCIM/VNEDownloader',
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: isDark ? AppConstants.darkCard : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 38,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF333333) : const Color(0xFFD1D5DB),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Pilih Folder Unduhan',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? AppConstants.textLight : AppConstants.textDark,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Tentukan folder penyimpanan media di perangkat Anda.',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: isDark ? AppConstants.textLightMuted : AppConstants.textMuted,
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Option 1: FilePicker native directory picker
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppConstants.darkPrimaryLight : AppConstants.primaryLight,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(Icons.drive_folder_upload_rounded, color: accentColor),
+                ),
+                title: const Text(
+                  'Pilih dari Penyimpanan Ponsel',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                ),
+                subtitle: const Text(
+                  'Buka pemilih folder bawaan Android',
+                  style: TextStyle(fontSize: 12),
+                ),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () async {
+                  Navigator.of(ctx).pop();
+                  try {
+                    final selected = await FilePicker.getDirectoryPath();
+                    if (selected != null && selected.isNotEmpty) {
+                      await ref.read(settingsProvider.notifier).setSaveFolder(selected);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Folder diatur ke: $selected'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Gagal memilih folder: $e'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  }
+                },
+              ),
+              const Divider(),
+              const SizedBox(height: 6),
+              Text(
+                'Folder Standar Cepat:',
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? AppConstants.textLightMuted : AppConstants.textMuted,
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...presets.map((path) {
+                final isSelected = settings.saveFolder == path;
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  leading: Icon(
+                    isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
+                    color: isSelected ? accentColor : Colors.grey,
+                    size: 20,
+                  ),
+                  title: Text(
+                    path,
+                    style: TextStyle(
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontSize: 13.5,
+                    ),
+                  ),
+                  onTap: () async {
+                    Navigator.of(ctx).pop();
+                    await ref.read(settingsProvider.notifier).setSaveFolder(path);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Folder diatur ke: $path'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  },
+                );
+              }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   void _showQualityDialog(BuildContext context, WidgetRef ref) {
     final strings = AppStrings.of(context);
@@ -315,15 +466,8 @@ class SettingsScreen extends ConsumerWidget {
                   settings.saveFolder,
                   style: const TextStyle(fontSize: 12),
                 ),
-                trailing: const Icon(Icons.info_outline_rounded, size: 20),
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('File disimpan di folder: ${settings.saveFolder}'),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                },
+                trailing: const Icon(Icons.chevron_right_rounded, size: 20),
+                onTap: () => _showFolderDialog(context, ref),
               ),
               Divider(height: 1, color: dividerColor),
               // Hanya Wi-Fi
@@ -433,7 +577,7 @@ class SettingsScreen extends ConsumerWidget {
               ListTile(
                 leading: Icon(Icons.info_outline_rounded, color: accentColor),
                 title: Text(strings.settingAboutVersion),
-                subtitle: const Text('VNEDownloader v1.0.0 (MVP)'),
+                subtitle: const Text('VNEDownloader v1.0.2'),
               ),
               Divider(height: 1, color: dividerColor),
               ListTile(

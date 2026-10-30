@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppConstants {
   static const String appName = 'VNEDownloader';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '1.0.2';
   static const String appSubtitle = 'MP4 & MP3 dari YouTube';
   static const String githubUrl = 'https://github.com/kevinvanmerligt/VNEDownloader';
   static const String defaultDownloadFolder = 'Movies/VNEDownloader';

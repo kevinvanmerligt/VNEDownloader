@@ -9,6 +9,13 @@ import 'package:vnedownloader/features/download/domain/video_quality.dart';
 import '../video_source.dart';
 
 class YoutubeSource implements VideoSource {
+  yt_lib.YoutubeExplode? _ytClient;
+
+  yt_lib.YoutubeExplode get _yt {
+    _ytClient ??= yt_lib.YoutubeExplode();
+    return _ytClient!;
+  }
+
   @override
   String get id => 'youtube';
 
@@ -24,14 +31,13 @@ class YoutubeSource implements VideoSource {
       throw const InvalidUrlFailure();
     }
 
-    final yt = yt_lib.YoutubeExplode();
     try {
       final videoId = yt_lib.VideoId(videoIdStr);
-      final video = await yt.videos.get(videoId);
+      final video = await _yt.videos.get(videoId);
 
       yt_lib.StreamManifest manifest;
       try {
-        manifest = await yt.videos.streamsClient.getManifest(videoId);
+        manifest = await _yt.videos.streamsClient.getManifest(videoId);
       } catch (e) {
         if (e is yt_lib.VideoRequiresPurchaseException ||
             e is yt_lib.VideoUnplayableException) {
@@ -113,11 +119,17 @@ class YoutubeSource implements VideoSource {
         description: video.description,
       );
     } on SocketException {
-      throw const NetworkFailure();
+      throw const NetworkFailure('Tidak dapat terhubung ke internet.');
     } on AppFailure {
       rethrow;
     } catch (e) {
       final msg = e.toString().toLowerCase();
+      if (msg.contains('requestlimitexceededexception') ||
+          msg.contains('suspicious') ||
+          msg.contains('rate limit')) {
+        throw const NetworkFailure(
+            'Koneksi ke YouTube dibatasi sementara. Tunggu beberapa saat lalu coba lagi.');
+      }
       if (msg.contains('private') ||
           msg.contains('copyright') ||
           msg.contains('restricted') ||
@@ -126,9 +138,7 @@ class YoutubeSource implements VideoSource {
         throw const VideoRestrictedFailure(
             'Video privat, berbayar, atau dilindungi hak cipta.');
       }
-      throw DownloadFailure('Gagal memeriksa tautan video: ${e.toString()}');
-    } finally {
-      yt.close();
+      throw DownloadFailure('Gagal memeriksa video: ${e.toString()}');
     }
   }
 
@@ -144,17 +154,15 @@ class YoutubeSource implements VideoSource {
         fileExtension: ext,
         expectedSizeBytes: streamInfo.size.totalBytes,
         openStream: () {
-          final yt = yt_lib.YoutubeExplode();
-          return yt.videos.streamsClient.get(streamInfo);
+          return _yt.videos.streamsClient.get(streamInfo);
         },
       );
     }
 
     // If streamRef is not set directly, fetch fresh manifest
-    final yt = yt_lib.YoutubeExplode();
     try {
       final videoId = yt_lib.VideoId(info.id);
-      final manifest = await yt.videos.streamsClient.getManifest(videoId);
+      final manifest = await _yt.videos.streamsClient.getManifest(videoId);
       yt_lib.StreamInfo? selectedStream;
 
       if (isMp3) {
@@ -174,12 +182,16 @@ class YoutubeSource implements VideoSource {
         fileExtension: ext,
         expectedSizeBytes: selectedStream.size.totalBytes,
         openStream: () {
-          final client = yt_lib.YoutubeExplode();
-          return client.videos.streamsClient.get(selectedStream!);
+          return _yt.videos.streamsClient.get(selectedStream!);
         },
       );
-    } finally {
-      yt.close();
+    } catch (e) {
+      throw DownloadFailure('Gagal menyiapkan tautan unduhan: ${e.toString()}');
     }
+  }
+
+  void dispose() {
+    _ytClient?.close();
+    _ytClient = null;
   }
 }

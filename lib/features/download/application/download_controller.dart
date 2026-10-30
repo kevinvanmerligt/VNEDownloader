@@ -57,6 +57,7 @@ class DownloadController extends StateNotifier<DownloadState> {
   final VideoSource _videoSource;
   final DownloadService _downloadService;
   final Ref _ref;
+  final Set<String> _pendingRetries = {};
 
   DownloadController({
     required VideoSource videoSource,
@@ -122,10 +123,20 @@ class DownloadController extends StateNotifier<DownloadState> {
     }
   }
 
-  Future<void> startDownload(VideoInfo info, VideoQuality quality) async {
+  Future<void> startDownload(
+    VideoInfo info,
+    VideoQuality quality, {
+    String? existingItemId,
+  }) async {
     final settings = _ref.read(settingsProvider);
     final historyNotifier = _ref.read(historyProvider.notifier);
-    final itemId = const Uuid().v4();
+    final itemId = existingItemId ?? const Uuid().v4();
+
+    // Prevent duplicate download of the exact same item ID
+    if (state.activeDownloads.containsKey(itemId) ||
+        _downloadService.isDownloading(itemId)) {
+      return;
+    }
 
     var item = DownloadItem(
       id: itemId,
@@ -156,6 +167,8 @@ class DownloadController extends StateNotifier<DownloadState> {
         onlyWifi: settings.onlyWifi,
         customFolder: settings.saveFolder,
         onProgress: (progress, received, total) {
+          if (!state.activeDownloads.containsKey(itemId)) return;
+
           item = item.copyWith(
             progress: progress,
             sizeBytes: total > 0 ? total : item.sizeBytes,
@@ -205,30 +218,54 @@ class DownloadController extends StateNotifier<DownloadState> {
   }
 
   Future<void> retryDownload(DownloadItem item) async {
-    final info = await checkUrl(item.url);
-    if (info != null) {
-      VideoQuality? targetQuality;
-      for (final q in info.availableQualities) {
-        if (q.label == item.quality) {
-          targetQuality = q;
-          break;
+    // 1. Debounce and prevent duplicate retry requests
+    if (_pendingRetries.contains(item.id) ||
+        state.activeDownloads.containsKey(item.id) ||
+        _downloadService.isDownloading(item.id)) {
+      return;
+    }
+
+    _pendingRetries.add(item.id);
+
+    try {
+      final info = await checkUrl(item.url);
+      if (info != null) {
+        VideoQuality? targetQuality;
+        for (final q in info.availableQualities) {
+          if (q.label == item.quality) {
+            targetQuality = q;
+            break;
+          }
+        }
+        targetQuality ??= info.availableQualities.isNotEmpty
+            ? info.availableQualities.first
+            : null;
+
+        if (targetQuality != null) {
+          // Pass the existing item.id so we NEVER create multiple duplicate items!
+          await startDownload(info, targetQuality, existingItemId: item.id);
         }
       }
-      targetQuality ??= info.availableQualities.isNotEmpty
-          ? info.availableQualities.first
-          : null;
-
-      if (targetQuality != null) {
-        await startDownload(info, targetQuality);
-      }
+    } finally {
+      _pendingRetries.remove(item.id);
     }
   }
 
   void cancelDownload(String id) {
     _downloadService.cancelDownload(id);
+
     final currentMap = Map<String, DownloadItem>.from(state.activeDownloads);
-    currentMap.remove(id);
+    final cancelledItem = currentMap.remove(id);
     state = state.copyWith(activeDownloads: currentMap);
+
+    if (cancelledItem != null) {
+      final updated = cancelledItem.copyWith(
+        status: DownloadStatus.failed,
+        errorCode: 'Unduhan dibatalkan',
+        completedAt: DateTime.now(),
+      );
+      _ref.read(historyProvider.notifier).updateItem(updated);
+    }
   }
 }
 
