@@ -12,6 +12,8 @@ class SettingsScreen extends ConsumerWidget {
   void _showQualityDialog(BuildContext context, WidgetRef ref) {
     final strings = AppStrings.of(context);
     final settings = ref.read(settingsProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = isDark ? AppConstants.darkPrimaryAccent : AppConstants.primaryColor;
 
     showDialog(
       context: context,
@@ -31,7 +33,7 @@ class SettingsScreen extends ConsumerWidget {
                   isSelected
                       ? Icons.radio_button_checked_rounded
                       : Icons.radio_button_off_rounded,
-                  color: isSelected ? AppConstants.primaryColor : Colors.grey,
+                  color: isSelected ? accentColor : Colors.grey,
                   size: 20,
                 ),
                 const SizedBox(width: 12),
@@ -52,6 +54,8 @@ class SettingsScreen extends ConsumerWidget {
   void _showThemeDialog(BuildContext context, WidgetRef ref) {
     final strings = AppStrings.of(context);
     final settings = ref.read(settingsProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = isDark ? AppConstants.darkPrimaryAccent : AppConstants.primaryColor;
 
     showDialog(
       context: context,
@@ -64,6 +68,7 @@ class SettingsScreen extends ConsumerWidget {
             ThemePreference.system,
             strings.settingThemeSystem,
             settings.themePreference,
+            accentColor,
           ),
           _themeOption(
             ctx,
@@ -71,13 +76,15 @@ class SettingsScreen extends ConsumerWidget {
             ThemePreference.light,
             strings.settingThemeLight,
             settings.themePreference,
+            accentColor,
           ),
           _themeOption(
             ctx,
             ref,
             ThemePreference.dark,
-            strings.settingThemeDark,
+            '${strings.settingThemeDark} (Halloween Dark)',
             settings.themePreference,
+            accentColor,
           ),
         ],
       ),
@@ -90,6 +97,7 @@ class SettingsScreen extends ConsumerWidget {
     ThemePreference theme,
     String label,
     ThemePreference current,
+    Color accentColor,
   ) {
     final isSelected = theme == current;
     return SimpleDialogOption(
@@ -103,7 +111,7 @@ class SettingsScreen extends ConsumerWidget {
             isSelected
                 ? Icons.radio_button_checked_rounded
                 : Icons.radio_button_off_rounded,
-            color: isSelected ? AppConstants.primaryColor : Colors.grey,
+            color: isSelected ? accentColor : Colors.grey,
             size: 20,
           ),
           const SizedBox(width: 12),
@@ -121,6 +129,8 @@ class SettingsScreen extends ConsumerWidget {
   void _showLanguageDialog(BuildContext context, WidgetRef ref) {
     final strings = AppStrings.of(context);
     final settings = ref.read(settingsProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = isDark ? AppConstants.darkPrimaryAccent : AppConstants.primaryColor;
 
     showDialog(
       context: context,
@@ -139,7 +149,7 @@ class SettingsScreen extends ConsumerWidget {
                       ? Icons.radio_button_checked_rounded
                       : Icons.radio_button_off_rounded,
                   color: settings.languageCode == 'id'
-                      ? AppConstants.primaryColor
+                      ? accentColor
                       : Colors.grey,
                   size: 20,
                 ),
@@ -161,7 +171,7 @@ class SettingsScreen extends ConsumerWidget {
                       ? Icons.radio_button_checked_rounded
                       : Icons.radio_button_off_rounded,
                   color: settings.languageCode == 'en'
-                      ? AppConstants.primaryColor
+                      ? accentColor
                       : Colors.grey,
                   size: 20,
                 ),
@@ -257,6 +267,8 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppStrings.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = isDark ? AppConstants.darkPrimaryAccent : AppConstants.primaryColor;
+    final dividerColor = isDark ? AppConstants.darkBorder : AppConstants.lightBorder;
     final settings = ref.watch(settingsProvider);
 
     String themeLabel = strings.settingThemeSystem;
@@ -265,7 +277,7 @@ class SettingsScreen extends ConsumerWidget {
         themeLabel = strings.settingThemeLight;
         break;
       case ThemePreference.dark:
-        themeLabel = strings.settingThemeDark;
+        themeLabel = '${strings.settingThemeDark} (Halloween Dark)';
         break;
       case ThemePreference.system:
         themeLabel = strings.settingThemeSystem;
@@ -297,8 +309,7 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               // Folder simpan
               ListTile(
-                leading: const Icon(Icons.folder_open_rounded,
-                    color: AppConstants.primaryColor),
+                leading: Icon(Icons.folder_open_rounded, color: accentColor),
                 title: Text(strings.settingFolder),
                 subtitle: Text(
                   settings.saveFolder,
@@ -314,34 +325,32 @@ class SettingsScreen extends ConsumerWidget {
                   );
                 },
               ),
-              const Divider(height: 1),
+              Divider(height: 1, color: dividerColor),
               // Hanya Wi-Fi
               SwitchListTile(
-                secondary: const Icon(Icons.wifi_rounded,
-                    color: AppConstants.primaryColor),
+                secondary: Icon(Icons.wifi_rounded, color: accentColor),
                 title: Text(strings.settingWifiOnly),
                 subtitle: Text(
                   strings.settingWifiOnlySub,
                   style: const TextStyle(fontSize: 12),
                 ),
                 value: settings.onlyWifi,
-                activeThumbColor: AppConstants.primaryColor,
+                activeThumbColor: accentColor,
                 onChanged: (val) {
                   ref.read(settingsProvider.notifier).setOnlyWifi(val);
                 },
               ),
-              const Divider(height: 1),
+              Divider(height: 1, color: dividerColor),
               // Kualitas bawaan
               ListTile(
-                leading: const Icon(Icons.high_quality_rounded,
-                    color: AppConstants.primaryColor),
+                leading: Icon(Icons.high_quality_rounded, color: accentColor),
                 title: Text(strings.settingDefaultQuality),
                 subtitle: Text(
                   qualityLabel,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppConstants.primaryColor,
+                    color: accentColor,
                   ),
                 ),
                 trailing: const Icon(Icons.chevron_right_rounded),
@@ -359,32 +368,30 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               // Tema
               ListTile(
-                leading: const Icon(Icons.palette_outlined,
-                    color: AppConstants.primaryColor),
+                leading: Icon(Icons.palette_outlined, color: accentColor),
                 title: Text(strings.settingTheme),
                 subtitle: Text(
                   themeLabel,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppConstants.primaryColor,
+                    color: accentColor,
                   ),
                 ),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => _showThemeDialog(context, ref),
               ),
-              const Divider(height: 1),
+              Divider(height: 1, color: dividerColor),
               // Bahasa
               ListTile(
-                leading: const Icon(Icons.language_rounded,
-                    color: AppConstants.primaryColor),
+                leading: Icon(Icons.language_rounded, color: accentColor),
                 title: Text(strings.settingLanguage),
                 subtitle: Text(
                   settings.languageCode == 'id' ? 'Bahasa Indonesia' : 'English',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppConstants.primaryColor,
+                    color: accentColor,
                   ),
                 ),
                 trailing: const Icon(Icons.chevron_right_rounded),
@@ -424,31 +431,28 @@ class SettingsScreen extends ConsumerWidget {
             isDark: isDark,
             children: [
               ListTile(
-                leading: const Icon(Icons.info_outline_rounded,
-                    color: AppConstants.primaryColor),
+                leading: Icon(Icons.info_outline_rounded, color: accentColor),
                 title: Text(strings.settingAboutVersion),
                 subtitle: const Text('VNEDownloader v1.0.0 (MVP)'),
               ),
-              const Divider(height: 1),
+              Divider(height: 1, color: dividerColor),
               ListTile(
-                leading: const Icon(Icons.code_rounded,
-                    color: AppConstants.primaryColor),
+                leading: Icon(Icons.code_rounded, color: accentColor),
                 title: Text(strings.settingAboutGithub),
                 subtitle: const Text(AppConstants.githubUrl),
                 trailing: const Icon(Icons.open_in_new_rounded, size: 18),
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Rilis APK bertanda tangan di GitHub Releases.'),
+                      content: Text('Rilis APK bertanda tangan di GitHub.'),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
                 },
               ),
-              const Divider(height: 1),
+              Divider(height: 1, color: dividerColor),
               ListTile(
-                leading: const Icon(Icons.privacy_tip_outlined,
-                    color: AppConstants.primaryColor),
+                leading: Icon(Icons.privacy_tip_outlined, color: accentColor),
                 title: Text(strings.settingPrivacy),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => _showPrivacyPolicyDialog(context),
@@ -480,14 +484,14 @@ class SettingsScreen extends ConsumerWidget {
     return Material(
       color: isDark ? AppConstants.darkCard : Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         side: BorderSide(
           color: isDark ? AppConstants.darkBorder : AppConstants.lightBorder,
           width: 1,
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         child: Column(children: children),
       ),
     );

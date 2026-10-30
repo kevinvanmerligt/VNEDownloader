@@ -14,22 +14,19 @@ class HeaderBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
         children: [
-          // App Logo from Assets
+          // App Logo from Assets with clean rounded border
           Container(
             width: 44,
             height: 44,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: AppConstants.primaryColor.withValues(alpha: 0.25),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              border: Border.all(
+                color: isDark ? AppConstants.darkBorder : AppConstants.lightBorder,
+                width: 1,
+              ),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(11),
               child: Image.asset(
                 'assets/images/logo.png',
                 width: 44,
@@ -54,47 +51,13 @@ class HeaderBar extends StatelessWidget {
                     letterSpacing: -0.3,
                   ),
                 ),
-                const SizedBox(height: 1),
+                const SizedBox(height: 2),
                 Text(
                   strings.appSubtitle,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 12.5,
                     fontWeight: FontWeight.w500,
                     color: isDark ? AppConstants.textLightMuted : AppConstants.textMuted,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Status Chip "Aktif" (Green)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: AppConstants.statusActiveLight,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppConstants.statusActive.withValues(alpha: 0.3),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 7,
-                  height: 7,
-                  decoration: const BoxDecoration(
-                    color: AppConstants.statusActive,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  strings.statusActive,
-                  style: const TextStyle(
-                    color: Color(0xFF065F46),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
                   ),
                 ),
               ],

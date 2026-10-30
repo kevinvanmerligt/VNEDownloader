@@ -23,14 +23,14 @@ class AppTheme {
         backgroundColor: Colors.white,
         foregroundColor: AppConstants.textDark,
         elevation: 0,
-        scrolledUnderElevation: 0.5,
+        scrolledUnderElevation: 0,
         centerTitle: false,
       ),
       cardTheme: CardThemeData(
         color: AppConstants.lightCard,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(14),
           side: const BorderSide(color: AppConstants.lightBorder, width: 1),
         ),
         margin: EdgeInsets.zero,
@@ -41,19 +41,19 @@ class AppTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppConstants.lightBorder, width: 1.2),
+          borderSide: const BorderSide(color: AppConstants.lightBorder, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppConstants.lightBorder, width: 1.2),
+          borderSide: const BorderSide(color: AppConstants.lightBorder, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppConstants.primaryColor, width: 2),
+          borderSide: const BorderSide(color: AppConstants.primaryColor, width: 1.8),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppConstants.statusFailed, width: 1.2),
+          borderSide: const BorderSide(color: AppConstants.statusFailed, width: 1),
         ),
         hintStyle: const TextStyle(color: AppConstants.textMuted, fontSize: 14),
       ),
@@ -67,8 +67,8 @@ class AppTheme {
           ),
           textStyle: const TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.2,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.1,
           ),
           elevation: 0,
         ),
@@ -77,23 +77,24 @@ class AppTheme {
         backgroundColor: Colors.white,
         selectedItemColor: AppConstants.primaryColor,
         unselectedItemColor: AppConstants.textMuted,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
         unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
         type: BottomNavigationBarType.fixed,
-        elevation: 8,
+        elevation: 0,
       ),
     );
   }
 
   static ThemeData get darkTheme {
+    // Pure Matte Black & Halloween Blood Red (No Neon / No AI Slop)
     final colorScheme = ColorScheme.dark(
-      primary: AppConstants.primaryColor,
+      primary: AppConstants.darkPrimaryColor,
       onPrimary: Colors.white,
-      secondary: AppConstants.primaryLight,
-      onSecondary: AppConstants.textDark,
+      secondary: AppConstants.darkPrimaryAccent,
+      onSecondary: Colors.white,
       surface: AppConstants.darkCard,
       onSurface: AppConstants.textLight,
-      error: AppConstants.statusFailed,
+      error: AppConstants.darkStatusFailed,
       onError: Colors.white,
     );
 
@@ -103,42 +104,46 @@ class AppTheme {
       scaffoldBackgroundColor: AppConstants.darkBg,
       fontFamily: 'sans-serif',
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppConstants.darkCard,
+        backgroundColor: AppConstants.darkBg,
         foregroundColor: AppConstants.textLight,
         elevation: 0,
-        scrolledUnderElevation: 0.5,
+        scrolledUnderElevation: 0,
         centerTitle: false,
       ),
       cardTheme: CardThemeData(
         color: AppConstants.darkCard,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(14),
           side: const BorderSide(color: AppConstants.darkBorder, width: 1),
         ),
         margin: EdgeInsets.zero,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppConstants.darkCard,
+        fillColor: AppConstants.darkCardSubtle,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppConstants.darkBorder, width: 1.2),
+          borderSide: const BorderSide(color: AppConstants.darkBorder, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppConstants.darkBorder, width: 1.2),
+          borderSide: const BorderSide(color: AppConstants.darkBorder, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppConstants.primaryColor, width: 2),
+          borderSide: const BorderSide(color: AppConstants.darkPrimaryColor, width: 1.8),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: AppConstants.darkStatusFailed, width: 1),
         ),
         hintStyle: const TextStyle(color: AppConstants.textLightMuted, fontSize: 14),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppConstants.primaryColor,
+          backgroundColor: AppConstants.darkPrimaryColor,
           foregroundColor: Colors.white,
           minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangleBorder(
@@ -146,20 +151,20 @@ class AppTheme {
           ),
           textStyle: const TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.2,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.1,
           ),
           elevation: 0,
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: AppConstants.darkCard,
-        selectedItemColor: AppConstants.primaryColor,
+        backgroundColor: AppConstants.darkBg,
+        selectedItemColor: AppConstants.darkPrimaryAccent,
         unselectedItemColor: AppConstants.textLightMuted,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
         unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
         type: BottomNavigationBarType.fixed,
-        elevation: 8,
+        elevation: 0,
       ),
     );
   }

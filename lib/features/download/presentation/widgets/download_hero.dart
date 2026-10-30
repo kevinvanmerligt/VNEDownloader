@@ -11,17 +11,17 @@ class DownloadHero extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             strings.heroTitle,
             style: TextStyle(
-              fontSize: 26,
+              fontSize: 27,
               fontWeight: FontWeight.w800,
-              height: 1.2,
-              letterSpacing: -0.5,
+              height: 1.18,
+              letterSpacing: -0.6,
               color: isDark ? AppConstants.textLight : AppConstants.textDark,
             ),
           ),
@@ -29,10 +29,10 @@ class DownloadHero extends StatelessWidget {
           Text(
             strings.heroSubtitle,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13.5,
               height: 1.4,
               fontWeight: FontWeight.w400,
-              color: isDark ? AppConstants.textLightMuted : AppConstants.textMuted,
+              color: isDark ? AppConstants.textLightMuted : const Color(0xFF6B7280),
             ),
           ),
         ],

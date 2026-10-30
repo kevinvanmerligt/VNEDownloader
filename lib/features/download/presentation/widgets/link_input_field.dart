@@ -50,6 +50,7 @@ class _LinkInputFieldState extends ConsumerState<LinkInputField> {
   Widget build(BuildContext context) {
     final strings = AppStrings.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
     final downloadState = ref.watch(downloadControllerProvider);
 
     return Padding(
@@ -61,17 +62,21 @@ class _LinkInputFieldState extends ConsumerState<LinkInputField> {
           Text(
             strings.linkFieldLabel,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.5,
               fontWeight: FontWeight.w700,
               color: isDark ? AppConstants.textLight : AppConstants.textDark,
             ),
           ),
           const SizedBox(height: 8),
 
-          // Input field container
+          // Input field container matching the photo
           TextField(
             controller: _urlController,
             textInputAction: TextInputAction.done,
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? AppConstants.textLight : AppConstants.textDark,
+            ),
             onSubmitted: (_) => _handleCheckLink(),
             onChanged: (_) {
               if (downloadState.errorMessage != null) {
@@ -80,23 +85,48 @@ class _LinkInputFieldState extends ConsumerState<LinkInputField> {
             },
             decoration: InputDecoration(
               hintText: strings.linkFieldPlaceholder,
-              prefixIcon: const Icon(
+              hintStyle: TextStyle(
+                color: isDark ? AppConstants.textLightMuted : AppConstants.textMuted,
+                fontSize: 14,
+              ),
+              prefixIcon: Icon(
                 Icons.link_rounded,
-                color: AppConstants.primaryColor,
-                size: 22,
+                color: isDark ? AppConstants.textLightMuted : const Color(0xFF6B7280),
+                size: 20,
               ),
               suffixIcon: Padding(
-                padding: const EdgeInsets.only(right: 6),
-                child: TextButton.icon(
-                  onPressed: _handlePaste,
-                  icon: const Icon(Icons.content_paste_rounded, size: 16),
-                  label: Text(strings.pasteButton),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppConstants.primaryColor,
-                    visualDensity: VisualDensity.compact,
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                child: InkWell(
+                  onTap: _handlePaste,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF222222) : const Color(0xFFF3F4F6),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isDark ? const Color(0xFF333333) : const Color(0xFFE5E7EB),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.content_paste_rounded,
+                          size: 14,
+                          color: isDark ? AppConstants.textLight : const Color(0xFF4B5563),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          strings.pasteButton,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? AppConstants.textLight : const Color(0xFF374151),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -110,26 +140,27 @@ class _LinkInputFieldState extends ConsumerState<LinkInputField> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: AppConstants.statusFailedLight,
+                color: isDark ? AppConstants.darkStatusFailedLight : AppConstants.statusFailedLight,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: AppConstants.statusFailed.withOpacity(0.3),
+                  color: (isDark ? AppConstants.darkStatusFailed : AppConstants.statusFailed)
+                      .withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.error_outline_rounded,
-                    color: AppConstants.statusFailed,
+                    color: isDark ? AppConstants.darkStatusFailed : AppConstants.statusFailed,
                     size: 18,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       downloadState.errorMessage!,
-                      style: const TextStyle(
-                        color: Color(0xFF991B1B),
+                      style: TextStyle(
+                        color: isDark ? AppConstants.darkStatusFailed : const Color(0xFF991B1B),
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -140,20 +171,20 @@ class _LinkInputFieldState extends ConsumerState<LinkInputField> {
             ),
           ],
 
-          const SizedBox(height: 14),
+          const SizedBox(height: 12),
 
-          // Main Action Button "Cek tautan →"
+          // Main Action Button "Cek tautan →" matching the photo
           SizedBox(
             width: double.infinity,
-            height: 50,
+            height: 48,
             child: ElevatedButton(
               onPressed: downloadState.isChecking ? null : _handleCheckLink,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppConstants.primaryColor,
-                disabledBackgroundColor: AppConstants.primaryColor.withOpacity(0.6),
+                backgroundColor: primaryColor,
+                disabledBackgroundColor: primaryColor.withValues(alpha: 0.6),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 elevation: 0,
               ),
@@ -162,8 +193,8 @@ class _LinkInputFieldState extends ConsumerState<LinkInputField> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(
-                          width: 20,
-                          height: 20,
+                          width: 18,
+                          height: 18,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.2,
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -185,7 +216,7 @@ class _LinkInputFieldState extends ConsumerState<LinkInputField> {
                         Text(
                           strings.checkLinkButton,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 15.5,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 0.2,
                           ),

@@ -37,6 +37,8 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
         );
 
     final isAudio = _selectedQuality!.format.toLowerCase() == 'mp3';
+    final primaryColor = Theme.of(context).colorScheme.primary;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -44,7 +46,7 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
               ? 'Mulai mengunduh audio MP3: ${widget.videoInfo.title}'
               : 'Mulai mengunduh video: ${widget.videoInfo.title}',
         ),
-        backgroundColor: AppConstants.primaryColor,
+        backgroundColor: primaryColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -55,12 +57,19 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
   Widget build(BuildContext context) {
     final strings = AppStrings.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
     final info = widget.videoInfo;
 
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppConstants.darkCard : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
+        border: Border(
+          top: BorderSide(
+            color: isDark ? AppConstants.darkBorder : AppConstants.lightBorder,
+            width: 1,
+          ),
+        ),
       ),
       padding: EdgeInsets.only(
         top: 12,
@@ -75,10 +84,10 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
           // Drag handle
           Center(
             child: Container(
-              width: 40,
+              width: 38,
               height: 4,
               decoration: BoxDecoration(
-                color: isDark ? Colors.grey[700] : Colors.grey[300],
+                color: isDark ? const Color(0xFF333333) : const Color(0xFFD1D5DB),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -94,44 +103,48 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
               color: isDark ? AppConstants.textLight : AppConstants.textDark,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
 
-          // Video Preview Header (Thumbnail, Title, Author, Duration)
+          // Video Preview Header
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(14),
+              color: isDark ? AppConstants.darkCardSubtle : const Color(0xFFF3F4F6),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isDark ? AppConstants.darkBorder : AppConstants.lightBorder,
+                width: 1,
+              ),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Thumbnail
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                   child: info.thumbnailUrl != null
                       ? Image.network(
                           info.thumbnailUrl!,
-                          width: 100,
-                          height: 60,
+                          width: 90,
+                          height: 56,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) => Container(
-                            width: 100,
-                            height: 60,
-                            color: Colors.grey[800],
+                            width: 90,
+                            height: 56,
+                            color: isDark ? const Color(0xFF222222) : Colors.grey[300],
                             child: const Icon(Icons.movie_creation_outlined,
                                 color: Colors.white70),
                           ),
                         )
                       : Container(
-                          width: 100,
-                          height: 60,
-                          color: Colors.grey[800],
+                          width: 90,
+                          height: 56,
+                          color: isDark ? const Color(0xFF222222) : Colors.grey[300],
                           child: const Icon(Icons.movie_creation_outlined,
                               color: Colors.white70),
                         ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 // Video Details
                 Expanded(
                   child: Column(
@@ -142,7 +155,7 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 13.5,
                           fontWeight: FontWeight.w600,
                           height: 1.25,
                           color: isDark ? AppConstants.textLight : AppConstants.textDark,
@@ -157,7 +170,7 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 11.5,
                                 color: isDark
                                     ? AppConstants.textLightMuted
                                     : AppConstants.textMuted,
@@ -169,7 +182,7 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                             Text(
                               '• ${Formatters.formatDuration(info.duration)}',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 11.5,
                                 color: isDark
                                     ? AppConstants.textLightMuted
                                     : AppConstants.textMuted,
@@ -184,18 +197,18 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
               ],
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
 
           // Quality Options List Header
           Text(
             strings.approxSize,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 12.5,
               fontWeight: FontWeight.w600,
               color: isDark ? AppConstants.textLightMuted : AppConstants.textMuted,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
 
           ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 250),
@@ -222,14 +235,16 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppConstants.primaryColor.withValues(alpha: 0.1)
-                          : (isDark ? const Color(0xFF1E293B) : Colors.white),
+                          ? (isDark
+                              ? AppConstants.darkPrimaryLight
+                              : AppConstants.primaryLight)
+                          : (isDark ? AppConstants.darkCardSubtle : Colors.white),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected
-                            ? AppConstants.primaryColor
+                            ? primaryColor
                             : (isDark ? AppConstants.darkBorder : AppConstants.lightBorder),
-                        width: isSelected ? 1.8 : 1.0,
+                        width: isSelected ? 1.6 : 1.0,
                       ),
                     ),
                     child: Row(
@@ -239,8 +254,8 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                               ? Icons.radio_button_checked_rounded
                               : Icons.radio_button_off_rounded,
                           color: isSelected
-                              ? AppConstants.primaryColor
-                              : (isDark ? Colors.grey[500] : Colors.grey[400]),
+                              ? primaryColor
+                              : (isDark ? Colors.grey[600] : Colors.grey[400]),
                           size: 20,
                         ),
                         const SizedBox(width: 10),
@@ -250,7 +265,7 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                               : Icons.videocam_rounded,
                           color: isMp3
                               ? const Color(0xFF10B981)
-                              : AppConstants.primaryColor,
+                              : primaryColor,
                           size: 20,
                         ),
                         const SizedBox(width: 10),
@@ -261,7 +276,7 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                               Text(
                                 quality.label,
                                 style: TextStyle(
-                                  fontSize: 14.5,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color: isDark ? AppConstants.textLight : AppConstants.textDark,
                                 ),
@@ -272,8 +287,8 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: isMp3
-                                      ? const Color(0xFFD1FAE5)
-                                      : (isDark ? Colors.grey[800] : Colors.grey[200]),
+                                      ? (isDark ? const Color(0xFF0F291E) : const Color(0xFFD1FAE5))
+                                      : (isDark ? const Color(0xFF262626) : const Color(0xFFE5E7EB)),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
@@ -282,7 +297,7 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                                     fontSize: 11,
                                     fontWeight: FontWeight.w700,
                                     color: isMp3
-                                        ? const Color(0xFF065F46)
+                                        ? const Color(0xFF10B981)
                                         : (isDark ? Colors.grey[300] : Colors.grey[700]),
                                   ),
                                 ),
@@ -294,10 +309,10 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
                         Text(
                           sizeStr,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 12.5,
                             fontWeight: FontWeight.w600,
                             color: isSelected
-                                ? AppConstants.primaryColor
+                                ? primaryColor
                                 : (isDark
                                     ? AppConstants.textLightMuted
                                     : AppConstants.textMuted),
@@ -310,12 +325,12 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
               },
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
 
           // Download Action Button
           SizedBox(
             width: double.infinity,
-            height: 50,
+            height: 48,
             child: ElevatedButton.icon(
               onPressed: _selectedQuality != null ? _handleDownload : null,
               icon: Icon(
@@ -326,10 +341,10 @@ class _QualityBottomSheetState extends ConsumerState<QualityBottomSheet> {
               ),
               label: Text(strings.downloadAction),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppConstants.primaryColor,
+                backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 elevation: 0,
               ),

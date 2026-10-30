@@ -75,10 +75,31 @@ class ScaffoldWithNavBar extends StatelessWidget {
     final selectedIndex = _calculateSelectedIndex(context);
 
     return Scaffold(
-      body: child,
+      // Smooth animated transition across tab changes (60/90/120/144Hz optimized)
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 280),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (Widget page, Animation<double> animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.015, 0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: page,
+            ),
+          );
+        },
+        child: KeyedSubtree(
+          key: ValueKey<int>(selectedIndex),
+          child: child,
+        ),
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: isDark ? AppConstants.darkCard : Colors.white,
+          color: isDark ? AppConstants.darkBg : Colors.white,
           border: Border(
             top: BorderSide(
               color: isDark ? AppConstants.darkBorder : AppConstants.lightBorder,
@@ -132,29 +153,28 @@ class ScaffoldWithNavBar extends StatelessWidget {
     required bool isSelected,
     required bool isDark,
   }) {
+    final activeColor = isDark ? AppConstants.darkPrimaryAccent : AppConstants.primaryColor;
+    final activeBg = isDark ? AppConstants.darkPrimaryLight : AppConstants.primaryLight;
+    final inactiveColor = isDark ? AppConstants.textLightMuted : AppConstants.textMuted;
+
     return InkWell(
       onTap: () => _onItemTapped(index, context),
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(14),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected
-              ? (isDark
-                  ? AppConstants.primaryColor.withOpacity(0.2)
-                  : AppConstants.primaryLight)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          color: isSelected ? activeBg : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
-              size: 22,
-              color: isSelected
-                  ? AppConstants.primaryColor
-                  : (isDark ? AppConstants.textLightMuted : AppConstants.textMuted),
+              size: 21,
+              color: isSelected ? activeColor : inactiveColor,
             ),
             const SizedBox(width: 6),
             Text(
@@ -162,9 +182,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected
-                    ? AppConstants.primaryColor
-                    : (isDark ? AppConstants.textLightMuted : AppConstants.textMuted),
+                color: isSelected ? activeColor : inactiveColor,
               ),
             ),
           ],

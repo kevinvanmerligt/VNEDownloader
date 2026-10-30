@@ -101,8 +101,8 @@ class HistoryScreen extends ConsumerWidget {
                       height: 80,
                       decoration: BoxDecoration(
                         color: isDark
-                            ? const Color(0xFF1E293B)
-                            : const Color(0xFFF1F5F9),
+                            ? const Color(0xFF1A1A1A)
+                            : const Color(0xFFF3F4F6),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(

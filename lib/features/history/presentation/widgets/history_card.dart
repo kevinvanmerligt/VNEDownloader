@@ -148,7 +148,7 @@ class HistoryCard extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppConstants.darkCard : Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDark ? AppConstants.darkBorder : AppConstants.lightBorder,
           width: 1,
@@ -156,44 +156,44 @@ class HistoryCard extends ConsumerWidget {
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         child: InkWell(
           onTap: () => _handleTap(context, ref),
           onLongPress: () => _showDeleteDialog(context, ref),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(12),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
               children: [
-                // Icon file di kiri
+                // Icon file matching photo
                 Container(
-                  width: 44,
-                  height: 44,
+                  width: 42,
+                  height: 42,
                   decoration: BoxDecoration(
                     color: isDark
-                        ? const Color(0xFF1E293B)
-                        : const Color(0xFFF1F5F9),
+                        ? const Color(0xFF1E1E1E)
+                        : const Color(0xFFF3F4F6),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
                     child: Icon(
                       item.status == DownloadStatus.completed
-                          ? (isMp3 ? Icons.music_note_rounded : Icons.play_arrow_rounded)
+                          ? (isMp3 ? Icons.music_note_rounded : Icons.video_file_outlined)
                           : (item.status == DownloadStatus.failed
-                              ? Icons.error_outline_rounded
+                              ? Icons.warning_amber_rounded
                               : Icons.downloading_rounded),
                       color: item.status == DownloadStatus.completed
-                          ? (isMp3 ? const Color(0xFF10B981) : AppConstants.primaryColor)
+                          ? (isDark ? AppConstants.textLightMuted : const Color(0xFF4B5563))
                           : (item.status == DownloadStatus.failed
-                              ? AppConstants.statusFailed
-                              : AppConstants.statusDownloading),
-                      size: 26,
+                              ? (isDark ? AppConstants.darkStatusFailed : AppConstants.statusFailed)
+                              : Theme.of(context).colorScheme.primary),
+                      size: 24,
                     ),
                   ),
                 ),
                 const SizedBox(width: 12),
 
-                // Video/Audio info (Title 1 baris, info baris kecil)
+                // Video/Audio info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +217,7 @@ class HistoryCard extends ConsumerWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 11.5,
+                          fontSize: 12,
                           color: isDark
                               ? AppConstants.textLightMuted
                               : AppConstants.textMuted,
@@ -229,9 +229,9 @@ class HistoryCard extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
                             value: item.progress > 0 ? item.progress : null,
-                            backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                                AppConstants.primaryColor),
+                            backgroundColor: isDark ? const Color(0xFF262626) : const Color(0xFFE5E7EB),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).colorScheme.primary),
                             minHeight: 4,
                           ),
                         ),
@@ -242,7 +242,7 @@ class HistoryCard extends ConsumerWidget {
                 const SizedBox(width: 8),
 
                 // Lencana status di kanan: Selesai, Mengunduh, Gagal
-                _buildStatusBadge(context, ref, strings),
+                _buildStatusBadge(context, ref, strings, isDark),
               ],
             ),
           ),
@@ -252,23 +252,29 @@ class HistoryCard extends ConsumerWidget {
   }
 
   Widget _buildStatusBadge(
-      BuildContext context, WidgetRef ref, AppStrings strings) {
+      BuildContext context, WidgetRef ref, AppStrings strings, bool isDark) {
     switch (item.status) {
       case DownloadStatus.completed:
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: AppConstants.statusCompletedLight,
-            borderRadius: BorderRadius.circular(20),
+            color: isDark
+                ? AppConstants.darkStatusCompletedLight
+                : AppConstants.statusCompletedLight,
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: AppConstants.statusCompleted.withValues(alpha: 0.3),
+              color: isDark
+                  ? AppConstants.darkStatusCompleted.withValues(alpha: 0.3)
+                  : AppConstants.statusCompleted.withValues(alpha: 0.3),
               width: 1,
             ),
           ),
           child: Text(
             strings.statusCompletedBadge,
-            style: const TextStyle(
-              color: AppConstants.statusCompleted,
+            style: TextStyle(
+              color: isDark
+                  ? AppConstants.darkStatusCompleted
+                  : AppConstants.statusCompleted,
               fontWeight: FontWeight.w700,
               fontSize: 11,
             ),
@@ -283,13 +289,13 @@ class HistoryCard extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: AppConstants.primaryLight,
-                borderRadius: BorderRadius.circular(20),
+                color: isDark ? AppConstants.darkPrimaryLight : AppConstants.primaryLight,
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
                 '$percent%',
-                style: const TextStyle(
-                  color: AppConstants.primaryColor,
+                style: TextStyle(
+                  color: isDark ? AppConstants.darkPrimaryAccent : AppConstants.primaryColor,
                   fontWeight: FontWeight.w700,
                   fontSize: 11,
                 ),
@@ -297,7 +303,7 @@ class HistoryCard extends ConsumerWidget {
             ),
             IconButton(
               icon: const Icon(Icons.close_rounded, size: 16),
-              color: Colors.grey,
+              color: isDark ? AppConstants.textLightMuted : Colors.grey,
               visualDensity: VisualDensity.compact,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
@@ -315,38 +321,30 @@ class HistoryCard extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: AppConstants.statusFailedLight,
-                borderRadius: BorderRadius.circular(20),
+                color: isDark
+                    ? AppConstants.darkStatusFailedLight
+                    : AppConstants.statusFailedLight,
+                borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: AppConstants.statusFailed.withValues(alpha: 0.3),
+                  color: (isDark ? AppConstants.darkStatusFailed : AppConstants.statusFailed)
+                      .withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    Icons.warning_amber_rounded,
-                    color: AppConstants.statusFailed,
-                    size: 13,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    strings.statusFailedBadge,
-                    style: const TextStyle(
-                      color: AppConstants.statusFailed,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
+              child: Text(
+                strings.statusFailedBadge,
+                style: TextStyle(
+                  color: isDark ? AppConstants.darkStatusFailed : AppConstants.statusFailed,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 11,
+                ),
               ),
             ),
             IconButton(
               icon: const Icon(Icons.refresh_rounded, size: 18),
-              color: AppConstants.primaryColor,
+              color: isDark ? AppConstants.darkPrimaryAccent : AppConstants.primaryColor,
               visualDensity: VisualDensity.compact,
               padding: const EdgeInsets.only(left: 4),
               constraints: const BoxConstraints(),
@@ -363,13 +361,13 @@ class HistoryCard extends ConsumerWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(20),
+            color: isDark ? const Color(0xFF222222) : Colors.grey[200],
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Text(
             strings.statusQueuedBadge,
-            style: const TextStyle(
-              color: Colors.grey,
+            style: TextStyle(
+              color: isDark ? AppConstants.textLightMuted : Colors.grey,
               fontWeight: FontWeight.w600,
               fontSize: 11,
             ),

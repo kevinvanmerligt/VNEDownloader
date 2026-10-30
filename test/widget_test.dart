@@ -25,7 +25,6 @@ void main() {
     // Verify app name and header
     expect(find.text(AppConstants.appName), findsOneWidget);
     expect(find.text('MP4 & MP3 dari YouTube'), findsOneWidget);
-    expect(find.text('Aktif'), findsOneWidget);
 
     // Verify hero text
     expect(find.text('Simpan video & audio YouTube ke ponsel'), findsOneWidget);

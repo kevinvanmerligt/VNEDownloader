@@ -25,31 +25,27 @@ class RecentDownloadsList extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section header with title & counter
+          // Section header with title & count matching photo
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
                 strings.recentDownloads,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 17,
                   fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
                   color: isDark ? AppConstants.textLight : AppConstants.textDark,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  strings.filesCount(allHistory.length),
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? AppConstants.textLightMuted : AppConstants.textMuted,
-                  ),
+              Text(
+                strings.filesCount(allHistory.length),
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? AppConstants.textLightMuted : AppConstants.textMuted,
                 ),
               ),
             ],

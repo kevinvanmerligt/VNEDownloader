@@ -45,23 +45,31 @@ No account registration, no third-party servers, and no tracking—just paste a 
 ### ⚡ 3. Ultra-Smooth 120Hz & 144Hz High Refresh Rate
 - Built with native Android display mode unlocking.
 - Automatically synchronizes with your device's maximum screen refresh rate (**60Hz, 90Hz, 120Hz, or 144Hz**) for butter-smooth scrolling and fluid animations on high-end gaming and flagship devices.
+- Seamless animated transitions between tabs for an ultra-responsive native feel.
 
-### 🔒 4. 100% Private, Ad-Free & On-Device
+### 🎃 4. Halloween Dark & Clean Light Themes
+- **Light Theme**: Minimalist, clean sky-blue and crisp white interface designed for daytime readability.
+- **Halloween Blood-Red Dark Theme**: Matte pure black (`#0A0A0A`) with deep blood-red accents (`#991B1B`) without neon glow or AI slop—crafted for AMOLED displays and night viewing.
+
+### 🔒 5. 100% Private, Ad-Free & On-Device
 - **Zero Ads**: No intrusive popups, banners, or video ads interrupting your experience.
 - **Direct Streaming**: Media downloads stream directly from source servers into your local storage without passing through any external proxy or third-party servers.
 - **No Sign-In Required**: No credentials or personal accounts needed.
 
-### 📲 5. Reliable Background Downloading
+### 📲 6. Reliable Background Downloading
 - Continue downloading even when you switch to other apps or turn off your screen.
 - Integrated Android status bar notification shows real-time progress percentages and download status.
 
-### 📶 6. Mobile Data Guard (Wi-Fi Only Mode)
+### 📶 7. Mobile Data Guard (Wi-Fi Only Mode)
 - Prevent accidental cellular data consumption with the built-in "Download over Wi-Fi only" switch.
 
-### 📁 7. Built-in Local History & One-Tap Playback
+### 📁 8. Built-in Local History & One-Tap Playback
 - All completed downloads are indexed in your local on-device history library.
 - Tap any completed video or audio file to immediately open and play it in your preferred media player (VLC, MX Player, Google Files, or the default gallery).
 - Manage storage directly within the app, with the option to delete history records alongside physical files.
+
+### 🪶 9. Compact & Lightweight (~21 MB)
+- Slashed by ~65% from bulky universal APKs to a streamlined ~21 MB package for quick downloads and low storage consumption.
 
 ---
 
